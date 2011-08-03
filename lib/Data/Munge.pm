@@ -8,7 +8,9 @@ our $VERSION = '0.032';
 our @EXPORT = our @EXPORT_OK = qw[list2re byval mapval submatches replace];
 
 sub list2re {
+	@_ or return qr/(?!)/;
 	my $re = join '|', map quotemeta, sort {length $b <=> length $a || $a cmp $b } @_;
+	$re eq '' and $re = '(?#)';
 	qr/$re/
 }
 
