@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use Data::Munge qw(list2re replace);
 
@@ -22,9 +22,16 @@ $_ = $orig;
 s/$re2/XY/g;
 is $_, $good2;
 
-my $re3 = list2re; warn $re3;
+my $re3 = list2re;
 my $good3 = $orig;
 is replace($orig, $re3, 'XY', 'g'), $good3;
 $_ = $orig;
 s/$re3/XY/g;
 is $_, $good3;
+
+my $re4 = list2re '';
+my $good4 = 'XY[XYaXYcXYaXYbXYbXYdXYcXYaXYcXYaXYbXY]XY';
+is replace($orig, $re4, 'XY', 'g'), $good4;
+$_ = $orig;
+s/$re4/XY/g;
+is $_, $good4;
