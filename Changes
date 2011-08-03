@@ -1,5 +1,8 @@
 Revision history for Data-Munge
 
+0.04    2011-08-04
+        * Fix buggy behavior for list2re('') and list2re()
+
 0.032   2010-01-23
         * Fix overly strict test that fails on < 5.10
 
