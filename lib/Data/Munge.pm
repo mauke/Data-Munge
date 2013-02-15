@@ -2,7 +2,7 @@ package Data::Munge;
 
 use warnings;
 use strict;
-use Exporter qw[import];
+use base qw(Exporter);
 
 our $VERSION = '0.04';
 our @EXPORT = our @EXPORT_OK = qw[list2re byval mapval submatches replace];
@@ -53,7 +53,7 @@ sub replace {
 	$str
 }
 
-1
+'ok'
 
 __END__
 
