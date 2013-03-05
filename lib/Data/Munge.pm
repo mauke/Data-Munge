@@ -5,7 +5,16 @@ use strict;
 use base qw(Exporter);
 
 our $VERSION = '0.04';
-our @EXPORT = our @EXPORT_OK = qw[list2re byval mapval submatches replace];
+our @EXPORT = our @EXPORT_OK = qw[
+	list2re
+	byval
+	mapval
+	submatches
+	replace
+	eval_string
+	rec
+	trim
+];
 
 sub list2re {
 	@_ or return qr/(?!)/;
@@ -53,6 +62,43 @@ sub replace {
 	$str
 }
 
+sub trim {
+	my ($s) = @_;
+	$s =~ s/^\s+//;
+	$s =~ s/\s+\z//;
+	$s
+}
+
+sub eval_string {
+	my @r = wantarray ? eval $_[0] : scalar eval $_[0];
+	die $@ if $@;
+	wantarray ? @r : $r[0]
+}
+
+if ($] >= 5.016) {
+	eval_string <<'EOT';
+use v5.16;
+sub rec (&) {
+	my ($f) = @_;
+	sub { $f->(__SUB__, @_) }
+}
+EOT
+} elsif (eval { require Scalar::Util } && defined &Scalar::Util::weaken) {
+	*rec = sub (&) {
+		my ($f) = @_;
+		my $w;
+		my $r = $w = sub { $f->($w, @_) };
+		Scalar::Util::weaken($w);
+		$r
+	};
+} else {
+	# slow but always works
+	*rec = sub (&) {
+		my ($f) = @_;
+		sub { $f->(&rec($f), @_) }
+	};
+}
+
 'ok'
 
 __END__
@@ -66,10 +112,24 @@ Data::Munge - various utility functions
  use Data::Munge;
  
  my $re = list2re qw/foo bar baz/;
+ 
  print byval { s/foo/bar/ } $text;
  foo(mapval { chomp } @lines);
+ 
  print replace('Apples are round, and apples are juicy.', qr/apples/i, 'oranges', 'g');
  print replace('John Smith', qr/(\w+)\s+(\w+)/, '$2, $1');
+ 
+ my $trimmed = trim "  a b c "; # "a b c"
+ 
+ eval_string('print "hello world\\n"');  # says hello
+ eval_string('die');  # dies
+ eval_string('{');    # throws a syntax error
+ 
+ my $fac = rec {
+   my ($rec, $n) = @_;
+   $n < 2 ? 1 : $n * $rec->($n - 1)
+ };
+ print $fac->(5);  # 120
 
 =head1 DESCRIPTION
 
@@ -166,6 +226,43 @@ value will be inserted in place of the matched substring.
 
 Normally only the first occurrence of REGEX is replaced. If FLAG is present, it
 must be C<'g'> and causes all occurrences to be replaced.
+
+=item trim STRING
+
+Returns I<STRING> with all leading and trailing whitespace removed.
+
+=item eval_string STRING
+
+Evals I<STRING> just like C<eval> but doesn't catch exceptions.
+
+=item rec BLOCK
+
+Creates an anonymous sub as C<sub BLOCK> would, but supplies the called sub
+with an extra argument that can be used to recurse:
+
+ my $code = rec {
+   my ($rec, $x) = @_;
+   $rec->($n - 1) if $n > 0;
+   print $n, "\n";
+ };
+ $code->(4);
+
+That is, when the sub is called, an implicit first argument is passed in
+C<$_[0]> (all normal arguments are moved one up). This first argument is a
+reference to the sub itself. This reference could be used to recurse directly
+or to register the sub as a handler in an event system, for example.
+
+A note on defining recursive anonymous functions: Doing this right is more
+complicated than it may at first appear. The most straightforward solution
+using a lexical variable and a closure leaks memory because it creates a
+reference cycle. Starting with perl 5.16 there is a C<__SUB__> constant that is
+equivalent to C<$rec> above, and this is indeed what this module uses (if
+available).
+
+However, this module works even on older perls by falling back to either weak
+references (if available) or a "fake recursion" scheme that dynamically
+instantiates a new sub for each call instead of creating a cycle. This last
+resort is slower than weak references but works everywhere.
 
 =back
 
