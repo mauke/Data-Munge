@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw(Exporter);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 our @EXPORT = our @EXPORT_OK = qw[
 	list2re
 	byval
@@ -272,7 +272,7 @@ Lukas Mai, C<< <l.mai at web.de> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2011 Lukas Mai.
+Copyright 2009-2011, 2013 Lukas Mai.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

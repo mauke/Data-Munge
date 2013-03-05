@@ -1,5 +1,8 @@
 Revision history for Data-Munge
 
+0.05    2013-03-05
+        * add trim, eval_string, and rec
+
 0.04    2011-08-04
         * Fix buggy behavior for list2re('') and list2re()
 
