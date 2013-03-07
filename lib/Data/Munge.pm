@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw(Exporter);
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 our @EXPORT = our @EXPORT_OK = qw[
 	list2re
 	byval
