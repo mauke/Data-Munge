@@ -14,6 +14,7 @@ our @EXPORT = our @EXPORT_OK = qw[
 	eval_string
 	rec
 	trim
+	elem
 ];
 
 sub list2re {
@@ -69,6 +70,24 @@ sub trim {
 	$s
 }
 
+sub elem {
+	my ($k, $xs) = @_;
+	if (ref $k) {
+		for my $x (@$xs) {
+			return 1 if ref $x && $k == $x;
+		}
+	} elsif (defined $k) {
+		for my $x (@$xs) {
+			return 1 if defined $x && $k eq $x;
+		}
+	} else {
+		for my $x (@$xs) {
+			return 1 if !defined $x;
+		}
+	}
+	!1
+}
+
 sub eval_string {
 	my @r = wantarray ? eval $_[0] : scalar eval $_[0];
 	die $@ if $@;
@@ -120,6 +139,9 @@ Data::Munge - various utility functions
  print replace('John Smith', qr/(\w+)\s+(\w+)/, '$2, $1');
  
  my $trimmed = trim "  a b c "; # "a b c"
+ 
+ my $x = 'bar';
+ if (elem $x, [qw(foo bar baz)]) { ... }
  
  eval_string('print "hello world\\n"');  # says hello
  eval_string('die');  # dies
@@ -230,6 +252,16 @@ must be C<'g'> and causes all occurrences to be replaced.
 =item trim STRING
 
 Returns I<STRING> with all leading and trailing whitespace removed.
+
+=item elem SCALAR, ARRAYREF
+
+Returns a boolean value telling you whether I<SCALAR> is an element of
+I<ARRAYREF> or not. Two scalars are considered equal if they're both C<undef>,
+if they're both references to the same thing, or if they're both not references
+and C<eq> to each other.
+
+This is implemented as a linear search through I<ARRAYREF> that terminates
+early if a match is found (i.e. C<elem 'A', ['A', 1 .. 9999]> won't even look at elements C<1 .. 9999>).
 
 =item eval_string STRING
 

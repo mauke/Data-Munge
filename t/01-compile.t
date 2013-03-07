@@ -1,8 +1,8 @@
 #!perl
 
-use Test::More tests => 19;
+use Test::More tests => 53;
 
-use warnings;
+use warnings FATAL => 'all';
 use strict;
 use Data::Munge;
 
@@ -39,3 +39,22 @@ is trim("X\nY \n "), "X\nY";
 is eval_string('"ab" . "cd"'), 'abcd';
 is eval { eval_string('{') }, undef;
 like $@, qr/Missing right curly/;
+
+ok !elem 42, [];
+ok elem 42, [42];
+ok elem "A",   [undef, [], "A", "B"];
+ok elem "B",   [undef, [], "A", "B"];
+ok elem undef, [undef, [], "A", "B"];
+ok !elem [],   [undef, [], "A", "B"];
+ok !elem "C",  [undef, [], "A", "B"];
+for my $ref ([], {}, sub {}) {
+	ok !elem $ref, [];
+	ok !elem $ref, [undef];
+	ok !elem $ref, ["$ref"];
+	ok !elem $ref, [[], {}];
+	ok elem $ref, [$ref];
+	ok elem $ref, ["A", "B", $ref];
+	ok elem $ref, ["A", $ref, "B"];
+	ok elem $ref, [$ref, "A", $ref, $ref];
+	ok elem $ref, [undef, $ref];
+}
