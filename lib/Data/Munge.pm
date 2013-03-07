@@ -273,7 +273,7 @@ Creates an anonymous sub as C<sub BLOCK> would, but supplies the called sub
 with an extra argument that can be used to recurse:
 
  my $code = rec {
-   my ($rec, $x) = @_;
+   my ($rec, $n) = @_;
    $rec->($n - 1) if $n > 0;
    print $n, "\n";
  };
