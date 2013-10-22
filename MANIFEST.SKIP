@@ -1,0 +1,13 @@
+\.tar\.gz$
+^Build$
+^Data-Munge-
+^GNUmakefile$
+^MANIFEST\.(?!SKIP$)
+^MYMETA\.
+^Makefile$
+^Makefile\.old$
+^\.
+^_build
+^blib
+^cover_db$
+^pm_to_blib
