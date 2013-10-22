@@ -5,7 +5,7 @@ use strict;
 use base qw(Exporter);
 
 our $VERSION = '0.06';
-our @EXPORT = our @EXPORT_OK = qw[
+our @EXPORT = qw[
 	list2re
 	byval
 	mapval
