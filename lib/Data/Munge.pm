@@ -88,8 +88,13 @@ sub elem {
 	!1
 }
 
+sub _eval { eval $_[0] }  # empty lexical scope
+
 sub eval_string {
-	my @r = wantarray ? eval $_[0] : scalar eval $_[0];
+	my ($code) = @_;
+	my ($package, $file, $line) = caller;
+	$code = qq{package $package; # eval_string()\n#line $line "$file"\n$code};
+	my @r = wantarray ? _eval $code : scalar _eval $code;
 	die $@ if $@;
 	wantarray ? @r : $r[0]
 }
