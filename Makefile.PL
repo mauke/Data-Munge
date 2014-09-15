@@ -18,20 +18,20 @@ my %opt = (
     PL_FILES => {},
 
     CONFIGURE_REQUIRES => {
-        'strict' => 0,
-        'warnings' => 0,
+        'strict'              => 0,
+        'warnings'            => 0,
         'ExtUtils::MakeMaker' => '6.48',
     },
     BUILD_REQUIRES => {},
     TEST_REQUIRES => {
-        'Test::More'  => 0,
+        'Test::More'     => 0,
         'Test::Warnings' => 0,
     },
     PREREQ_PM => {
-        'Exporter'       => 0,
-        'base'           => 0,
-        'strict'         => 0,
-        'warnings'       => 0,
+        'Exporter' => 0,
+        'base'     => 0,
+        'strict'   => 0,
+        'warnings' => 0,
     },
 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
