@@ -1,5 +1,8 @@
 Revision history for Data-Munge
 
+0.08    2014-09-15
+        * Make trim(undef) return undef without warnings.
+
 0.07    2013-10-22
         * eval_string() now sets __FILE__ and __LINE__ for the eval'd code.
           This may or may not make error locations more useful.
