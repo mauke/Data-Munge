@@ -65,6 +65,7 @@ sub replace {
 
 sub trim {
 	my ($s) = @_;
+	return undef if !defined $s;
 	$s =~ s/^\s+//;
 	$s =~ s/\s+\z//;
 	$s
@@ -257,7 +258,8 @@ must be C<'g'> and causes all occurrences to be replaced.
 
 =item trim STRING
 
-Returns I<STRING> with all leading and trailing whitespace removed.
+Returns I<STRING> with all leading and trailing whitespace removed. Like
+L<C<length>|perlfunc/length-EXPR> it returns C<undef> if the input is C<undef>.
 
 =item elem SCALAR, ARRAYREF
 

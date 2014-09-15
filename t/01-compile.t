@@ -1,6 +1,7 @@
 #!perl
 
-use Test::More tests => 53;
+use Test::More tests => 55;
+use Test::Warnings;
 
 use warnings FATAL => 'all';
 use strict;
@@ -26,6 +27,7 @@ is trim("  "), "";
 is trim("\na"), "a";
 is trim("b\t"), "b";
 is trim("X\nY \n "), "X\nY";
+is trim(undef), undef;
 
 {
 	my $fac = rec {
