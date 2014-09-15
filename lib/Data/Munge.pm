@@ -6,122 +6,122 @@ use base qw(Exporter);
 
 our $VERSION = '0.07';
 our @EXPORT = qw[
-	list2re
-	byval
-	mapval
-	submatches
-	replace
-	eval_string
-	rec
-	trim
-	elem
+    list2re
+    byval
+    mapval
+    submatches
+    replace
+    eval_string
+    rec
+    trim
+    elem
 ];
 
 sub list2re {
-	@_ or return qr/(?!)/;
-	my $re = join '|', map quotemeta, sort {length $b <=> length $a || $a cmp $b } @_;
-	$re eq '' and $re = '(?#)';
-	qr/$re/
+    @_ or return qr/(?!)/;
+    my $re = join '|', map quotemeta, sort {length $b <=> length $a || $a cmp $b } @_;
+    $re eq '' and $re = '(?#)';
+    qr/$re/
 }
 
 sub byval (&$) {
-	my ($f, $x) = @_;
-	local *_ = \$x;
-	$f->($_);
-	$x
+    my ($f, $x) = @_;
+    local *_ = \$x;
+    $f->($_);
+    $x
 }
 
 sub mapval (&@) {
-	my $f = shift;
-	my @xs = @_;
-	map { $f->($_); $_ } @xs
+    my $f = shift;
+    my @xs = @_;
+    map { $f->($_); $_ } @xs
 }
 
 sub submatches {
-	no strict 'refs';
-	map $$_, 1 .. $#+
+    no strict 'refs';
+    map $$_, 1 .. $#+
 }
 
 sub replace {
-	my ($str, $re, $x, $g) = @_;
-	my $f = ref $x ? $x : sub {
-		my $r = $x;
-		$r =~ s{\$([\$&`'0-9]|\{([0-9]+)\})}{
-			$+ eq '$' ? '$' :
-			$+ eq '&' ? $_[0] :
-			$+ eq '`' ? substr($_[-1], 0, $_[-2]) :
-			$+ eq "'" ? substr($_[-1], $_[-2] + length $_[0]) :
-			$_[$+]
-		}eg;
-		$r
-	};
-	if ($g) {
-		$str =~ s{$re}{ $f->(substr($str, $-[0], $+[0] - $-[0]), submatches, $-[0], $str) }eg;
-	} else {
-		$str =~ s{$re}{ $f->(substr($str, $-[0], $+[0] - $-[0]), submatches, $-[0], $str) }e;
-	}
-	$str
+    my ($str, $re, $x, $g) = @_;
+    my $f = ref $x ? $x : sub {
+        my $r = $x;
+        $r =~ s{\$([\$&`'0-9]|\{([0-9]+)\})}{
+            $+ eq '$' ? '$' :
+            $+ eq '&' ? $_[0] :
+            $+ eq '`' ? substr($_[-1], 0, $_[-2]) :
+            $+ eq "'" ? substr($_[-1], $_[-2] + length $_[0]) :
+            $_[$+]
+        }eg;
+        $r
+    };
+    if ($g) {
+        $str =~ s{$re}{ $f->(substr($str, $-[0], $+[0] - $-[0]), submatches, $-[0], $str) }eg;
+    } else {
+        $str =~ s{$re}{ $f->(substr($str, $-[0], $+[0] - $-[0]), submatches, $-[0], $str) }e;
+    }
+    $str
 }
 
 sub trim {
-	my ($s) = @_;
-	return undef if !defined $s;
-	$s =~ s/^\s+//;
-	$s =~ s/\s+\z//;
-	$s
+    my ($s) = @_;
+    return undef if !defined $s;
+    $s =~ s/^\s+//;
+    $s =~ s/\s+\z//;
+    $s
 }
 
 sub elem {
-	my ($k, $xs) = @_;
-	if (ref $k) {
-		for my $x (@$xs) {
-			return 1 if ref $x && $k == $x;
-		}
-	} elsif (defined $k) {
-		for my $x (@$xs) {
-			return 1 if defined $x && $k eq $x;
-		}
-	} else {
-		for my $x (@$xs) {
-			return 1 if !defined $x;
-		}
-	}
-	!1
+    my ($k, $xs) = @_;
+    if (ref $k) {
+        for my $x (@$xs) {
+            return 1 if ref $x && $k == $x;
+        }
+    } elsif (defined $k) {
+        for my $x (@$xs) {
+            return 1 if defined $x && $k eq $x;
+        }
+    } else {
+        for my $x (@$xs) {
+            return 1 if !defined $x;
+        }
+    }
+    !1
 }
 
 sub _eval { eval $_[0] }  # empty lexical scope
 
 sub eval_string {
-	my ($code) = @_;
-	my ($package, $file, $line) = caller;
-	$code = qq{package $package; # eval_string()\n#line $line "$file"\n$code};
-	my @r = wantarray ? _eval $code : scalar _eval $code;
-	die $@ if $@;
-	wantarray ? @r : $r[0]
+    my ($code) = @_;
+    my ($package, $file, $line) = caller;
+    $code = qq{package $package; # eval_string()\n#line $line "$file"\n$code};
+    my @r = wantarray ? _eval $code : scalar _eval $code;
+    die $@ if $@;
+    wantarray ? @r : $r[0]
 }
 
 if ($] >= 5.016) {
-	eval_string <<'EOT';
+    eval_string <<'EOT';
 use v5.16;
 sub rec (&) {
-	my ($f) = @_;
-	sub { $f->(__SUB__, @_) }
+    my ($f) = @_;
+    sub { $f->(__SUB__, @_) }
 }
 EOT
 } elsif (eval { require Scalar::Util } && defined &Scalar::Util::weaken) {
-	*rec = sub (&) {
-		my ($f) = @_;
-		my $w;
-		my $r = $w = sub { $f->($w, @_) };
-		Scalar::Util::weaken($w);
-		$r
-	};
+    *rec = sub (&) {
+        my ($f) = @_;
+        my $w;
+        my $r = $w = sub { $f->($w, @_) };
+        Scalar::Util::weaken($w);
+        $r
+    };
 } else {
-	# slow but always works
-	*rec = sub (&) {
-		my ($f) = @_;
-		sub { $f->(&rec($f), @_) }
-	};
+    # slow but always works
+    *rec = sub (&) {
+        my ($f) = @_;
+        sub { $f->(&rec($f), @_) }
+    };
 }
 
 'ok'
@@ -313,7 +313,7 @@ Lukas Mai, C<< <l.mai at web.de> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2011, 2013 Lukas Mai.
+Copyright 2009-2011, 2013-2014 Lukas Mai.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

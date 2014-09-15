@@ -8,8 +8,8 @@ use strict;
 use Data::Munge;
 
 {
-	my $str = "abc|bar|baz|foo|\\*\\*|ab|\\!|\\*|a";
-	is list2re(qw[! a abc ab foo bar baz ** *]), qr/$str/, 'list2re';
+    my $str = "abc|bar|baz|foo|\\*\\*|ab|\\!|\\*|a";
+    is list2re(qw[! a abc ab foo bar baz ** *]), qr/$str/, 'list2re';
 }
 
 is +(byval { s/foo/bar/ } 'foo-foo'), 'bar-foo', 'byval';
@@ -30,12 +30,12 @@ is trim("X\nY \n "), "X\nY";
 is trim(undef), undef;
 
 {
-	my $fac = rec {
-		my ($rec, $n) = @_;
-		$n < 2 ? 1 : $n * $rec->($n - 1)
-	};
-	is $fac->(5), 120;
-	is $fac->(6), 720;
+    my $fac = rec {
+        my ($rec, $n) = @_;
+        $n < 2 ? 1 : $n * $rec->($n - 1)
+    };
+    is $fac->(5), 120;
+    is $fac->(6), 720;
 }
 
 is eval_string('"ab" . "cd"'), 'abcd';
@@ -50,13 +50,13 @@ ok elem undef, [undef, [], "A", "B"];
 ok !elem [],   [undef, [], "A", "B"];
 ok !elem "C",  [undef, [], "A", "B"];
 for my $ref ([], {}, sub {}) {
-	ok !elem $ref, [];
-	ok !elem $ref, [undef];
-	ok !elem $ref, ["$ref"];
-	ok !elem $ref, [[], {}];
-	ok elem $ref, [$ref];
-	ok elem $ref, ["A", "B", $ref];
-	ok elem $ref, ["A", $ref, "B"];
-	ok elem $ref, [$ref, "A", $ref, $ref];
-	ok elem $ref, [undef, $ref];
+    ok !elem $ref, [];
+    ok !elem $ref, [undef];
+    ok !elem $ref, ["$ref"];
+    ok !elem $ref, [[], {}];
+    ok elem $ref, [$ref];
+    ok elem $ref, ["A", "B", $ref];
+    ok elem $ref, ["A", $ref, "B"];
+    ok elem $ref, [$ref, "A", $ref, $ref];
+    ok elem $ref, [undef, $ref];
 }
