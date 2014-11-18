@@ -136,13 +136,19 @@ Data::Munge - various utility functions
 
  use Data::Munge;
  
- my $re = list2re qw/foo bar baz/;
+ my $re = list2re qw/f ba foo bar baz/;
+ # $re = qr/bar|baz|foo|ba|f/;
  
  print byval { s/foo/bar/ } $text;
+ # print do { my $tmp = $text; $tmp =~ s/foo/bar/; $tmp };
+ 
  foo(mapval { chomp } @lines);
+ # foo(map { my $tmp = $_; chomp $tmp; $_ } @lines);
  
  print replace('Apples are round, and apples are juicy.', qr/apples/i, 'oranges', 'g');
+ # "oranges are round, and oranges are juicy."
  print replace('John Smith', qr/(\w+)\s+(\w+)/, '$2, $1');
+ # "Smith, John"
  
  my $trimmed = trim "  a b c "; # "a b c"
  
@@ -166,7 +172,7 @@ redefining or working around them, so I wrote this module.
 
 =head2 Functions
 
-=over 4
+=over
 
 =item list2re LIST
 
@@ -175,6 +181,29 @@ Especially useful in combination with C<keys>. Example:
 
  my $re = list2re keys %hash;
  $str =~ s/($re)/$hash{$1}/g;
+
+This function takes special care to get several edge cases right:
+
+=over
+
+=item *
+
+Empty list: An empty argument list results in a regex that doesn't match
+anything.
+
+=item *
+
+Empty string: An argument list consisting of a single empty string results in a
+regex that matches the empty string (and nothing else).
+
+=item *
+
+Prefixes: The input strings are sorted by descending length to ensure longer
+matches are tried before shorter matches. Otherwise C<list2re('ab', 'abcd')>
+would generate C<qr/ab|abcd/>, which (on its own) can never match C<abcd>
+(because C<ab> is tried first, and it always succeeds where C<abcd> could).
+
+=back
 
 =item byval BLOCK SCALAR
 
@@ -186,6 +215,12 @@ in the block will not affect the passed in value. Example:
  foo(byval { s/!/?/g } $str);
  # Calls foo() with the value of $str, but all '!' have been replaced by '?'.
  # $str itself is not modified.
+
+Since perl 5.14 you can also use the C</r> flag:
+
+ foo($str =~ s/!/?/gr);
+
+But C<byval> works on all versions of perl and is not limited to C<s///>.
 
 =item mapval BLOCK LIST
 
