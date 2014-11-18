@@ -1,5 +1,9 @@
 Revision history for Data-Munge
 
+0.09    2014-11-18
+        * Add slurp.
+        * Don't leave $VERSION and @EXPORT in scope for eval_string.
+
 0.08    2014-09-15
         * Make trim(undef) return undef without warnings.
 

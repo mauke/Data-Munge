@@ -34,6 +34,9 @@ my %opt = (
         'warnings' => 0,
     },
 
+    depend => {
+        Makefile => '$(VERSION_FROM)',
+    },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'Data-Munge-*' },
 
