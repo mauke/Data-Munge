@@ -1,6 +1,6 @@
 #!perl
 
-use Test::More tests => 55;
+use Test::More tests => 59;
 use Test::Warnings;
 
 use warnings FATAL => 'all';
@@ -18,6 +18,11 @@ is_deeply [mapval { tr[a-d][1-4] } qw[foo bar baz]], [qw[foo 21r 21z]], 'mapval'
 is replace('Apples are round, and apples are juicy.', qr/apples/i, 'oranges', 'g'), 'oranges are round, and oranges are juicy.', 'replace g';
 is replace('John Smith', qr/(\w+)\s+(\w+)/, '$2, $1'), 'Smith, John', 'replace';
 is replace('97653 foo bar 42', qr/(\d)(\d)/, sub { $_[1] + $_[2] }, 'g'), '16113 foo bar 6', 'replace fun g';
+
+"foo bar" =~ /(\w+) (\w+)/ or die;
+is_deeply [submatches], [qw(foo bar)];
+"" =~ /^/ or die;
+is_deeply [submatches], [];
 
 is trim("  a  b  "), "a  b";
 is trim(""), "";
@@ -60,3 +65,13 @@ for my $ref ([], {}, sub {}) {
     ok elem $ref, [$ref, "A", $ref, $ref];
     ok elem $ref, [undef, $ref];
 }
+
+my $source = slurp \*DATA;
+like $source, qr/\AThis is the beginning\.$/m;
+like $source, qr/^This is the end\.\Z/m;
+
+__DATA__
+This is the beginning.
+stuff
+etc.
+This is the end.
