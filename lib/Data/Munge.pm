@@ -13,6 +13,7 @@ our @EXPORT = qw(
     mapval
     rec
     replace
+    slurp
     submatches
     trim
 );
@@ -109,6 +110,11 @@ sub replace {
         $str =~ s{$re}{ $f->(substr($str, $-[0], $+[0] - $-[0]), submatches(), $-[0], $str) }e;
     }
     $str
+}
+
+sub slurp {
+    local $/;
+    scalar readline $_[0]
 }
 
 sub submatches {
@@ -310,6 +316,14 @@ at elements C<1 .. 9999>).
 =item eval_string STRING
 
 Evals I<STRING> just like C<eval> but doesn't catch exceptions.
+
+=item slurp FILEHANDLE
+
+Reads and returns all remaining data from I<FILEHANDLE> as a string, or
+C<undef> if it hits end-of-file. (Interaction with non-blocking filehandles is
+currently not well defined.)
+
+C<slurp $handle> is equivalent to C<do { local $/; scalar readline $handle }>.
 
 =item rec BLOCK
 
