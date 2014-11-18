@@ -1,8 +1,10 @@
 package Data::Munge;
 
-use warnings;
 use strict;
+use warnings;
 use base qw(Exporter);
+
+sub _eval { eval $_[0] }  # empty lexical scope
 
 our $VERSION = '0.08';
 our @EXPORT = qw(
@@ -42,8 +44,6 @@ sub elem {
     }
     !1
 }
-
-sub _eval { eval $_[0] }  # empty lexical scope
 
 sub eval_string {
     my ($code) = @_;

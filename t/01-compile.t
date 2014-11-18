@@ -1,6 +1,6 @@
 #!perl
 
-use Test::More tests => 59;
+use Test::More tests => 61;
 use Test::Warnings;
 
 use warnings FATAL => 'all';
@@ -46,6 +46,8 @@ is trim(undef), undef;
 is eval_string('"ab" . "cd"'), 'abcd';
 is eval { eval_string('{') }, undef;
 like $@, qr/Missing right curly/;
+is eval { eval_string '$VERSION' }, undef;
+like $@, qr/Global symbol "\$VERSION"/;
 
 ok !elem 42, [];
 ok elem 42, [42];
