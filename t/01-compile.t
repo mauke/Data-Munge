@@ -69,8 +69,8 @@ for my $ref ([], {}, sub {}) {
 }
 
 my $source = slurp \*DATA;
-like $source, qr/\AThis is the beginning\.$/m;
-like $source, qr/^This is the end\.\Z/m;
+like $source, qr/\AThis is the beginning\.\n/;
+like $source, qr/\nThis is the end\.\Z/;
 
 __DATA__
 This is the beginning.
