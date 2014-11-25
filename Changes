@@ -1,5 +1,8 @@
 Revision history for Data-Munge
 
+0.092   2014-11-25
+        * Work around some parser bug in perl 5.6.
+
 0.091   2014-11-19
         * Work around regex bug (#115242) in perls < 5.18 that causes spurious
           test failures.
