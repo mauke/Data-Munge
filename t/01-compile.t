@@ -13,7 +13,7 @@ use Data::Munge;
 }
 
 is +(byval { s/foo/bar/ } 'foo-foo'), 'bar-foo', 'byval';
-is_deeply [mapval { tr[a-d][1-4] } qw[foo bar baz]], [qw[foo 21r 21z]], 'mapval';
+is_deeply [mapval { tr[a-d][1-4] } 'foo', 'bar', 'baz'], [qw[foo 21r 21z]], 'mapval';
 
 is replace('Apples are round, and apples are juicy.', qr/apples/i, 'oranges', 'g'), 'oranges are round, and oranges are juicy.', 'replace g';
 is replace('John Smith', qr/(\w+)\s+(\w+)/, '$2, $1'), 'Smith, John', 'replace';
