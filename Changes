@@ -1,5 +1,8 @@
 Revision history for Data-Munge
 
+0.093   2014-12-23
+        * Fix typo in synopsis (thanks, Ivan Wills).
+
 0.092   2014-11-25
         * Work around some parser bug in perl 5.6.
 
