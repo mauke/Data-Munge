@@ -1,6 +1,6 @@
 #!perl
 
-use Test::More tests => 61;
+use Test::More tests => 64;
 use Test::Warnings;
 
 use warnings FATAL => 'all';
@@ -60,6 +60,7 @@ for my $ref ([], {}, sub {}) {
     ok !elem $ref, [];
     ok !elem $ref, [undef];
     ok !elem $ref, ["$ref"];
+    ok !elem "$ref", [$ref];
     ok !elem $ref, [[], {}];
     ok elem $ref, [$ref];
     ok elem $ref, ["A", "B", $ref];

@@ -35,7 +35,7 @@ sub elem {
         }
     } elsif (defined $k) {
         for my $x (@$xs) {
-            return 1 if defined $x && $k eq $x;
+            return 1 if defined $x && !ref $x && $k eq $x;
         }
     } else {
         for my $x (@$xs) {
