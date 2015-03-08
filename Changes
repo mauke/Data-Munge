@@ -1,5 +1,9 @@
 Revision history for Data-Munge
 
+0.094   2015-03-08
+        * elem("$ref", [$ref]) is now false.
+          (elem($ref, ["$ref"]) had been false before.)
+
 0.093   2014-12-23
         * Fix typo in synopsis (thanks, Ivan Wills).
 
