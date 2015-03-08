@@ -6,6 +6,4 @@ README
 lib/Data/Munge.pm
 t/00-load.t
 t/01-compile.t
-t/pod-coverage.t
-t/pod.t
 t/torgox.t
