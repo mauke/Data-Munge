@@ -2,7 +2,6 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-
 sub merge_key_into {
     my ($href, $target, $source) = @_;
     %{$href->{$target}} = (%{$href->{$target}}, %{delete $href->{$source}});
@@ -52,6 +51,8 @@ my %opt = (
         },
     },
 );
+
+(do 'maint/eumm-fixup.pl' || die $@ || $!)->(\%opt) if !-f 'META.yml';
 
 (my $mm_version = ExtUtils::MakeMaker->VERSION($opt{CONFIGURE_REQUIRES}{'ExtUtils::MakeMaker'})) =~ tr/_//d;
 
