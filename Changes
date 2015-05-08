@@ -1,5 +1,8 @@
 Revision history for Data-Munge
 
+0.095   2015-05-08
+        * Extend documentation for slurp, submatches, eval_string.
+
 0.094   2015-03-08
         * elem("$ref", [$ref]) is now false.
           (elem($ref, ["$ref"]) had been false before.)
