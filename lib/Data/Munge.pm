@@ -161,6 +161,8 @@ Data::Munge - various utility functions
  my $x = 'bar';
  if (elem $x, [qw(foo bar baz)]) { ... }
  
+ my $contents = slurp $fh;  # or: slurp *STDIN
+ 
  eval_string('print "hello world\\n"');  # says hello
  eval_string('die');  # dies
  eval_string('{');    # throws a syntax error
@@ -170,6 +172,11 @@ Data::Munge - various utility functions
    $n < 2 ? 1 : $n * $rec->($n - 1)
  };
  print $fac->(5);  # 120
+ 
+ if ("hello, world!" =~ /(\w+), (\w+)/) {
+   my @captured = submatches;
+   # @captured = ("hello", "world")
+ }
 
 =head1 DESCRIPTION
 
@@ -315,7 +322,15 @@ at elements C<1 .. 9999>).
 
 =item eval_string STRING
 
-Evals I<STRING> just like C<eval> but doesn't catch exceptions.
+Evals I<STRING> just like C<eval> but doesn't catch exceptions. Caveat: Unlike
+with C<eval> the code runs in an empty lexical scope:
+
+ my $foo = "Hello, world!\n";
+ eval_string 'print $foo';
+ # Dies: Global symbol "$foo" requires explicit package name
+
+That is, the eval'd code can't see variables from the scope of the
+C<eval_string> call.
 
 =item slurp FILEHANDLE
 
