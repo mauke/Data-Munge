@@ -41,8 +41,9 @@ my %opt = (
     clean => { FILES    => 'Data-Munge-*' },
 
     META_MERGE => {
-        'meta-spec' => { version => 2 },
-        'resources' => {
+        'meta-spec'    => { version => 2 },
+        dynamic_config => 0,
+        resources      => {
             repository => {
                 url  => 'git://github.com/mauke/Data-Munge.git',
                 web  => 'https://github.com/mauke/Data-Munge',
