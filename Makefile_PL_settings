@@ -23,7 +23,5 @@ return {
         Makefile    => '$(VERSION_FROM)',
     },
 
-    test => { TESTS => find_tests_recursively_in('t') },
-
     bonus => { github => 'mauke' },
 };
