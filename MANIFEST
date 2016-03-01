@@ -7,5 +7,6 @@ README
 lib/Data/Munge.pm
 t/00-load.t
 t/01-compile.t
+t/eval.t
 t/torgox.t
 xt/pod.t

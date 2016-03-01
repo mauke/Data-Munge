@@ -48,9 +48,11 @@ sub elem {
 sub eval_string {
     my ($code) = @_;
     my ($package, $file, $line) = caller;
-    $code = qq{package $package; # eval_string()\n#line $line "$file"\n$code};
+    local $Data::Munge::_err = $@;
+    $code = qq{\$\@ = \$Data::Munge::_err; package $package; # eval_string()\n#line $line "$file"\n$code};
     my @r = wantarray ? _eval $code : scalar _eval $code;
     die $@ if $@;
+    $@ = $Data::Munge::_err;
     wantarray ? @r : $r[0]
 }
 
