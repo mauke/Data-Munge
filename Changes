@@ -1,5 +1,9 @@
 Revision history for Data-Munge
 
+0.096   2016-03-02
+        * eval_string() now preserves the value of $@ both inside the eval'd
+          code and outside (if no exception is thrown).
+
 0.095   2015-05-08
         * Extend documentation for slurp, submatches, eval_string.
 
