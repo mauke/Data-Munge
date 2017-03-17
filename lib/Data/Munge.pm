@@ -6,7 +6,7 @@ use base qw(Exporter);
 
 sub _eval { eval $_[0] }  # empty lexical scope
 
-our $VERSION = '0.096';
+our $VERSION = '0.097';
 our @EXPORT = qw(
     byval
     elem
