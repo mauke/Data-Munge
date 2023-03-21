@@ -163,12 +163,15 @@ Data::Munge - various utility functions
     print replace('John Smith', qr/(\w+)\s+(\w+)/, '$2, $1');
     # "Smith, John"
 
-    my $trimmed = trim "  a b c "; # "a b c"
+    my $trimmed = trim "  a b c ";
+    # "a b c"
 
     my $x = 'bar';
     if (elem $x, [qw(foo bar baz)]) { ... }
+    # executes: $x is an element of the arrayref
 
     my $contents = slurp $fh;  # or: slurp *STDIN
+    # reads all data from a filehandle into a scalar
 
     eval_string('print "hello world\\n"');  # says hello
     eval_string('die');  # dies
