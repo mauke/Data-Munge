@@ -1,20 +1,18 @@
-# vi:set ft=perl:
 use strict;
 use warnings;
 
 return {
-    NAME   => 'Data::Munge',
-    AUTHOR => q{Lukas Mai <l.mai@web.de>},
+    NAME               => 'Data::Munge',
+    AUTHOR             => q{Lukas Mai <l.mai@web.de>},
 
     CONFIGURE_REQUIRES => {},
-    BUILD_REQUIRES => {},
-    TEST_REQUIRES => {
+    BUILD_REQUIRES     => {},
+    TEST_REQUIRES      => {
         'Test::More'     => 0,
         'Test::Warnings' => 0,
     },
-    PREREQ_PM => {
-        'Exporter' => 0,
-        'base'     => 0,
+    PREREQ_PM          => {
+        'Exporter' => 5.57,
         'strict'   => 0,
         'warnings' => 0,
     },

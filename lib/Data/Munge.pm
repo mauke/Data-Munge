@@ -1,8 +1,7 @@
 package Data::Munge;
-
 use strict;
 use warnings;
-use base qw(Exporter);
+use Exporter 5.57 qw(import);
 
 sub _eval { eval $_[0] }  # empty lexical scope
 
