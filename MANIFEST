@@ -1,10 +1,9 @@
 Changes
+lib/Data/Munge.pm
+Makefile.PL
+Makefile_PL_settings.plx
 MANIFEST
 MANIFEST.SKIP
-Makefile.PL
-Makefile_PL_settings
-README
-lib/Data/Munge.pm
 t/00-load.t
 t/01-compile.t
 t/eval.t

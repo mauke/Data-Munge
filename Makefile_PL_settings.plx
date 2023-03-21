@@ -18,10 +18,9 @@ return {
         'strict'   => 0,
         'warnings' => 0,
     },
-
-    depend => {
-        Makefile    => '$(VERSION_FROM)',
+    DEVELOP_REQUIRES   => {
+        'Test::Pod' => 1.22,
     },
 
-    bonus => { github => 'mauke' },
+    REPOSITORY         => [ github => 'mauke' ],
 };
