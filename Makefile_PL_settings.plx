@@ -8,8 +8,7 @@ return {
     CONFIGURE_REQUIRES => {},
     BUILD_REQUIRES     => {},
     TEST_REQUIRES      => {
-        'Test::More'     => 0,
-        'Test::Warnings' => 0,
+        'Test2::V0' => 0,
     },
     PREREQ_PM          => {
         'Exporter' => 5.57,
