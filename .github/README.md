@@ -4,7 +4,7 @@ Data::Munge - various utility functions
 
 # SYNOPSIS
 
-```
+```perl
 use Data::Munge;
 
 my $re = list2re qw/f ba foo bar baz/;
@@ -56,7 +56,7 @@ redefining or working around them, so I wrote this module.
     Converts a list of strings to a regex that matches any of the strings.
     Especially useful in combination with `keys`. Example:
 
-    ```
+    ```perl
     my $re = list2re keys %hash;
     $str =~ s/($re)/$hash{$1}/g;
     ```
@@ -79,7 +79,7 @@ redefining or working around them, so I wrote this module.
     affected. `$_` isn't aliased to the input value either, so modifying `$_`
     in the block will not affect the passed in value. Example:
 
-    ```
+    ```perl
     foo(byval { s/!/?/g } $str);
     # Calls foo() with the value of $str, but all '!' have been replaced by '?'.
     # $str itself is not modified.
@@ -87,7 +87,7 @@ redefining or working around them, so I wrote this module.
 
     Since perl 5.14 you can also use the `/r` flag:
 
-    ```
+    ```perl
     foo($str =~ s/!/?/gr);
     ```
 
@@ -100,7 +100,7 @@ redefining or working around them, so I wrote this module.
     value is taken from `$_` again (it ignores the value returned by the
     block). Example:
 
-    ```
+    ```perl
     my @foo = mapval { chomp } @bar;
     # @foo contains a copy of @bar where all elements have been chomp'd.
     # This could also be written as chomp(my @foo = @bar); but that's not
@@ -180,7 +180,7 @@ redefining or working around them, so I wrote this module.
     Evals _STRING_ just like `eval` but doesn't catch exceptions. Caveat: Unlike
     with `eval` the code runs in an empty lexical scope:
 
-    ```
+    ```perl
     my $foo = "Hello, world!\n";
     eval_string 'print $foo';
     # Dies: Global symbol "$foo" requires explicit package name
@@ -202,7 +202,7 @@ redefining or working around them, so I wrote this module.
     Creates an anonymous sub as `sub BLOCK` would, but supplies the called sub
     with an extra argument that can be used to recurse:
 
-    ```
+    ```perl
     my $code = rec {
       my ($rec, $n) = @_;
       $rec->($n - 1) if $n > 0;
