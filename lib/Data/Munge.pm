@@ -137,6 +137,8 @@ __END__
 
 =encoding utf8
 
+=for github-markdown [![Coverage Status](https://coveralls.io/repos/github/mauke/Data-Munge/badge.svg?branch=main)](https://coveralls.io/github/mauke/Data-Munge?branch=main)
+
 =head1 NAME
 
 Data::Munge - various utility functions

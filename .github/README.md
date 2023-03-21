@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/mauke/Data-Munge/badge.svg?branch=main)](https://coveralls.io/github/mauke/Data-Munge?branch=main)
+
 # NAME
 
 Data::Munge - various utility functions
