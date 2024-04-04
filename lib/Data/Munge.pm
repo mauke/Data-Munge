@@ -70,10 +70,9 @@ sub mapval (&@) {
 
 if ($^V ge v5.16.0) {
     eval_string <<'EOT';
-use v5.16;
 sub rec (&) {
     my ($f) = @_;
-    sub { $f->(__SUB__, @_) }
+    sub { $f->(CORE::__SUB__, @_) }
 }
 EOT
 } elsif (eval { require Scalar::Util } && defined &Scalar::Util::weaken) {
