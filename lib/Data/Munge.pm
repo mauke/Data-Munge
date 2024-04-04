@@ -5,7 +5,7 @@ use Exporter 5.57 qw(import);
 
 sub _eval { eval $_[0] }  # empty lexical scope
 
-our $VERSION = '0.10';
+our $VERSION = '0.101';
 our @EXPORT = qw(
     byval
     elem
