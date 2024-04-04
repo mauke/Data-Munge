@@ -158,7 +158,7 @@ redefining or working around them, so I wrote this module.
     If REPLACEMENT is a subroutine reference, it's called with the following
     arguments: First the matched substring (like `$&` above), then the contents of
     the capture buffers (as returned by `submatches`), then the offset where the
-    pattern matched (like `$-[0]`, see ["@-" in perlvar](https://metacpan.org/pod/perlvar#pod)), then the STRING. The return
+    pattern matched (like `$-[0]`, see ["@-" in perlvar](https://perldoc.perl.org/perlvar#pod)), then the STRING. The return
     value will be inserted in place of the matched substring.
 
     Normally only the first occurrence of REGEX is replaced. If FLAG is present, it
@@ -167,7 +167,7 @@ redefining or working around them, so I wrote this module.
 - trim STRING
 
     Returns _STRING_ with all leading and trailing whitespace removed. Like
-    [`length`](https://metacpan.org/pod/perlfunc#length-EXPR) it returns `undef` if the input is `undef`.
+    [`length`](https://perldoc.perl.org/perlfunc#length-EXPR) it returns `undef` if the input is `undef`.
 
 - elem SCALAR, ARRAYREF
 

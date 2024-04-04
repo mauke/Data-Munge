@@ -1,33 +1,38 @@
 use strict;
 use warnings;
 
-use ExtUtils::MakeMaker 6.48 ();
+use ExtUtils::MakeMaker 7 ();
 use Config ();
-
-sub MY::postamble {
-    my ($self, %args) = @_;
-    $args{text} || ''
-}
 
 sub {
     my ($opt) = @_;
 
     $opt->{depend}{Makefile} .= ' $(VERSION_FROM) ' . __FILE__;
 
-    $opt->{test}{TESTS} .= ' ' . find_tests_recursively_in 'xt';
+    {
+        my $settings_file = 'Makefile_PL_settings_maint.plx';
+        $opt->{depend}{Makefile} .= " $settings_file";
+        (do "./$settings_file" || die $@ || $!)->($opt);
+    }
+
+    push @{$opt->{EXTRA_TEST_DIRS}}, 'xt';
+
+    for my $h_o ($opt->{HARNESS_OPTIONS}) {
+        @$h_o = ('c', 'j16', grep !/^j/, @$h_o);
+    }
 
     $opt->{postamble}{text} .= <<'__EOT__';
-export RELEASE_TESTING=1
-export HARNESS_OPTIONS=c
+export RELEASE_TESTING := 1
 __EOT__
 
+    my $extra_asan_options = delete $opt->{EXTRA_ASAN_OPTIONS} || '';
     if (exists $opt->{PREREQ_PM}{XSLoader}) {
         my $preload_libasan;
 
         my @ccflags;
         my @otherldflags;
 
-        if (-e '/dev/null') {
+        if ($^O eq 'linux' && !defined $ENV{GITHUB_ACTIONS}) {
             {
                 my $libasan_path = `\Q$Config::Config{cc}\E -print-file-name=libasan.so` || 'libasan.so';
                 chomp $libasan_path;
@@ -59,17 +64,25 @@ OTHERLDFLAGS += @otherldflags
 __EOT__
 
         if ($preload_libasan) {
-            my $extra_options = '';
             $opt->{postamble}{text} .= <<"__EOT__";
-FULLPERLRUN := $extra_options LD_PRELOAD="$preload_libasan \$\$LD_PRELOAD" \$(FULLPERLRUN)
+FULLPERLRUN := $extra_asan_options LD_PRELOAD="$preload_libasan \$\$LD_PRELOAD" \$(FULLPERLRUN)
 __EOT__
         }
     }
+
+    my $perl_ver_max = do {
+        my $v = sprintf '%vd', $^V;
+        $v =~ /\A5\.(\d{1,3})\./ or die "Can't parse \$^V '$v'";
+        $1
+    };
+    my $perl_ver_min = 6;
 
     my $perl_pattern = '*';
     if ($opt->{MIN_PERL_VERSION}) {
         my ($ver, $subver) = $opt->{MIN_PERL_VERSION} =~ /\A5\.(\d{1,3})\.(\d{1,3})\z/
             or die "Can't parse MIN_PERL_VERSION '$opt->{MIN_PERL_VERSION}'";
+
+        $perl_ver_min = $ver;
 
         my $genverpat = sub {
             my ($num, $width) = @_;
@@ -150,12 +163,21 @@ $(DISTVNAME)/README : lib/$(subst ::,/,$(NAME)).pm create_distdir
 	$(TEST_F) '$@' || ( $(PERLRUN) maint/pod2readme.pl < '$<' > '$@.~tmp~' && $(MV) -- '$@.~tmp~' '$@' && cd '$(DISTVNAME)' && $(PERLRUN) -MExtUtils::Manifest=maniadd -e 'maniadd { "README" => "generated from $(NAME) POD (added by maint/eumm-fixup.pl)" }' )
 
 __EOT__
-    $opt->{postamble}{text} .= $readme
+
+    my $github_tests = <<"__EOT__";
+pure_all :: .github/workflows/run-tests.yml
+
+.github/workflows/%.yml : .github/workflows/%.yml.tmpl maint/tm.pl Makefile
+	\$(PERLRUN) maint/tm.pl '\$<' '$perl_ver_min' '$perl_ver_max'
+
+__EOT__
+
+    $opt->{postamble}{text} .= $readme . $github_tests
         unless $^O eq 'MSWin32';
-    for ($opt->{META_MERGE}{prereqs}{develop}{requires}{'Pod::Markdown'}) {
+    for ($opt->{DEVELOP_REQUIRES}{'Pod::Markdown'}) {
         $_ = '3.005' if !$_ || $_ < '3.005';
     }
-    for ($opt->{META_MERGE}{prereqs}{develop}{requires}{'Pod::Text'}) {
+    for ($opt->{DEVELOP_REQUIRES}{'Pod::Text'}) {
         $_ = '4.09'  if !$_ || $_ < '4.09';
     }
 }

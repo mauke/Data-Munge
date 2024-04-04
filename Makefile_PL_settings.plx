@@ -11,7 +11,6 @@ return {
         'Test2::V0' => 0,
     },
     PREREQ_PM          => {
-        'Exporter' => 5.57,
         'strict'   => 0,
         'warnings' => 0,
     },
