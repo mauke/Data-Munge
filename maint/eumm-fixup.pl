@@ -173,7 +173,7 @@ pure_all :: .github/workflows/run-tests.yml
 __EOT__
 
     $opt->{postamble}{text} .= $readme . $github_tests
-        unless $^O eq 'MSWin32';
+        unless $^O eq 'MSWin32' || defined $ENV{GITHUB_ACTIONS};
     for ($opt->{DEVELOP_REQUIRES}{'Pod::Markdown'}) {
         $_ = '3.005' if !$_ || $_ < '3.005';
     }
