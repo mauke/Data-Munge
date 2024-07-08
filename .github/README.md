@@ -33,6 +33,9 @@ if (elem $x, [qw(foo bar baz)]) { ... }
 my $contents = slurp $fh;  # or: slurp *STDIN
 # reads all data from a filehandle into a scalar
 
+my $t = is_callable(sub {});   # true
+my $f = is_callable("hello");  # false
+
 eval_string('print "hello world\\n"');  # says hello
 eval_string('die');  # dies
 eval_string('{');    # throws a syntax error
@@ -180,6 +183,13 @@ redefining or working around them, so I wrote this module.
     early if a match is found (i.e. `elem 'A', ['A', 1 .. 9999]` won't even look
     at elements `1 .. 9999`).
 
+- is\_callable SCALAR
+
+    Returns a boolean value telling you whether _SCALAR_ can be called as a
+    function. This is the case if _SCALAR_ is either a reference to a subroutine
+    (such as `\&foo` or `sub { ... }`) or an object with an overloaded `'&{}'`
+    operator (see ["\* _Dereferencing_" in overload](https://metacpan.org/pod/overload#Dereferencing)).
+
 - eval\_string STRING
 
     Evals _STRING_ just like `eval` but doesn't catch exceptions. Caveat: Unlike
@@ -239,7 +249,7 @@ Lukas Mai, `<l.mai at web.de>`
 
 # COPYRIGHT & LICENSE
 
-Copyright 2009-2011, 2013-2015, 2023 Lukas Mai.
+Copyright 2009-2011, 2013-2015, 2023-2024 Lukas Mai.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

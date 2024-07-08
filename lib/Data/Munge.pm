@@ -10,6 +10,7 @@ our @EXPORT = qw(
     byval
     elem
     eval_string
+    is_callable
     list2re
     mapval
     rec
@@ -130,6 +131,13 @@ sub trim {
     $s
 }
 
+sub is_callable {
+    my ($f) = @_;
+    require Scalar::Util;
+    my $t = Scalar::Util::reftype($f);
+    defined $t && ($t eq 'CODE' || (require overload, overload::Method($f, '&{}')))
+}
+
 'ok'
 
 __END__
@@ -171,6 +179,9 @@ Data::Munge - various utility functions
 
     my $contents = slurp $fh;  # or: slurp *STDIN
     # reads all data from a filehandle into a scalar
+
+    my $t = is_callable(sub {});   # true
+    my $f = is_callable("hello");  # false
 
     eval_string('print "hello world\\n"');  # says hello
     eval_string('die');  # dies
@@ -329,6 +340,13 @@ This is implemented as a linear search through I<ARRAYREF> that terminates
 early if a match is found (i.e. C<elem 'A', ['A', 1 .. 9999]> won't even look
 at elements C<1 .. 9999>).
 
+=item is_callable SCALAR
+
+Returns a boolean value telling you whether I<SCALAR> can be called as a
+function. This is the case if I<SCALAR> is either a reference to a subroutine
+(such as C<\&foo> or C<sub { ... }>) or an object with an overloaded C<'&{}'>
+operator (see L<overload/"* I<Dereferencing>">).
+
 =item eval_string STRING
 
 Evals I<STRING> just like C<eval> but doesn't catch exceptions. Caveat: Unlike
@@ -386,7 +404,7 @@ Lukas Mai, C<< <l.mai at web.de> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2011, 2013-2015, 2023 Lukas Mai.
+Copyright 2009-2011, 2013-2015, 2023-2024 Lukas Mai.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
