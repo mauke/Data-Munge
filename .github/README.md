@@ -131,29 +131,29 @@ redefining or working around them, so I wrote this module.
     can be a string or a subroutine reference. If it's a string, it can contain the
     following replacement patterns:
 
-    - $$
+    - `$$`
 
         Inserts a '$'.
 
-    - $&
+    - `$&`
 
         Inserts the matched substring.
 
-    - $\`
+    - `` $` ``
 
         Inserts the substring preceding the match.
 
-    - $'
+    - `$'`
 
         Inserts the substring following the match.
 
-    - $N  (where N is a digit)
+    - `$N`  (where _N_ is a digit)
 
-        Inserts the substring matched by the Nth capturing group.
+        Inserts the substring matched by the _N_th capturing group.
 
-    - ${N}  (where N is one or more digits)
+    - `${N}`  (where _N_ is one or more digits)
 
-        Inserts the substring matched by the Nth capturing group.
+        Inserts the substring matched by the _N_th capturing group.
 
     Note that these aren't variables; they're character sequences interpreted by
     `replace`.

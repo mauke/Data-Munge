@@ -286,29 +286,29 @@ following replacement patterns:
 
 =over
 
-=item $$
+=item C<$$>
 
 Inserts a '$'.
 
-=item $&
+=item C<$&>
 
 Inserts the matched substring.
 
-=item $`
+=item C<$`>
 
 Inserts the substring preceding the match.
 
-=item $'
+=item C<$'>
 
 Inserts the substring following the match.
 
-=item $N  (where N is a digit)
+=item C<$N>  (where I<N> is a digit)
 
-Inserts the substring matched by the Nth capturing group.
+Inserts the substring matched by the I<N>th capturing group.
 
-=item ${N}  (where N is one or more digits)
+=item C<${N}>  (where I<N> is one or more digits)
 
-Inserts the substring matched by the Nth capturing group.
+Inserts the substring matched by the I<N>th capturing group.
 
 =back
 
